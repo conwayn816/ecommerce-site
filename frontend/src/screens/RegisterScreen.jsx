@@ -17,7 +17,7 @@ const RegisterScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [register, { isLoading, isError, error }] = useRegisterMutation();
+  const [register, { isLoading }] = useRegisterMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
 
