@@ -7,6 +7,7 @@ import Loader from "../../components/Loader";
 import {
   useGetProductsQuery,
   useCreateProductMutation,
+  useDeleteProductMutation,
 } from "../../slices/productsApiSlice";
 
 const ProductListScreen = () => {
@@ -15,16 +16,29 @@ const ProductListScreen = () => {
   const [createProduct, { isLoading: loadingCreate }] =
     useCreateProductMutation();
 
-  const deleteHandler = (id) => {};
+  const [deleteProduct, { isLoading: loadingDelete }] =
+    useDeleteProductMutation();
+
+  const deleteHandler = async (id) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      try {
+        await deleteProduct(id);
+        toast.success("Product deleted");
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
 
   const createProductHandler = async () => {
     if (window.confirm("Are you sure you want to create a new product?")) {
-        try {
-            await createProduct({});
-            refetch();
-        } catch (err) {
-            toast.error(err.message);
-        }
+      try {
+        await createProduct({});
+        refetch();
+      } catch (err) {
+        toast.error(err.message);
+      }
     }
   };
 
@@ -35,12 +49,13 @@ const ProductListScreen = () => {
           <h1>Products</h1>
         </Col>
         <Col className="text-end">
-            <Button className="btn-sm m-3" onClick={ createProductHandler }>
-                <FaEdit /> Create Product
-            </Button> 
+          <Button className="btn-sm m-3" onClick={createProductHandler}>
+            <FaEdit /> Create Product
+          </Button>
         </Col>
       </Row>
       {loadingCreate && <Loader />}
+      {loadingDelete && <Loader />}
       {isLoading ? (
         <Loader />
       ) : error ? (
