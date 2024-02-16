@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import {
   useUpdateProductMutation,
   useGetProductsDetailsQuery,
+  useUploadProductImageMutation,
 } from "../../slices/productsApiSlice";
 
 const ProductEditScreen = () => {
@@ -30,6 +31,9 @@ const ProductEditScreen = () => {
 
   const [updateProduct, { isLoading: loadingUpdate }] =
     useUpdateProductMutation();
+
+  const [uploadImage, { isLoading: loadingUpload }] =
+    useUploadProductImageMutation();
 
   const navigate = useNavigate();
 
@@ -60,14 +64,24 @@ const ProductEditScreen = () => {
 
     const result = await updateProduct(updatedProduct);
 
-    if (result.error)
-    {
-        toast.error(result.error);
+    if (result.error) {
+      toast.error(result.error);
     } else {
-        toast.success("Product updated successfully");
-        navigate("/admin/productlist");
+      toast.success("Product updated successfully");
+      navigate("/admin/productlist");
     }
+  };
 
+  const uploadFileHandler = async (e) => {
+    const formData = new FormData();
+    formData.append("image", e.target.files[0]);
+    try {
+      const res = await uploadImage(formData).unwrap();
+      toast.success(res.message);
+      setImage(res.image);
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
   };
 
   return (
@@ -106,7 +120,21 @@ const ProductEditScreen = () => {
               ></Form.Control>
             </Form.Group>
 
-            {/*image*/}
+            <Form.Group controlId="image">
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter image url"
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
+              ></Form.Control>
+              <Form.Control
+                label="Choose File"
+                onChange={uploadFileHandler}
+                type="file"
+              ></Form.Control>
+              {loadingUpload && <Loader />}
+            </Form.Group>
 
             <Form.Group controlId="brand" className="my-2">
               <Form.Label>Brand</Form.Label>
@@ -148,11 +176,7 @@ const ProductEditScreen = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Button
-              type="submit"
-              variant="primary"
-              className="my-3"
-            >
+            <Button type="submit" variant="primary" className="my-3">
               Update
             </Button>
           </Form>
