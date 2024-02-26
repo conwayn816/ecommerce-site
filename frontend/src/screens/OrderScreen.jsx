@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
+import Meta from "../components/Meta";
 import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
@@ -114,6 +115,7 @@ const OrderScreen = () => {
     <Message variant="danger">{error}</Message>
   ) : (
     <>
+      <Meta title={`Order ${order._id}`} />
       <h1>Order {order._id}</h1>
       <Row>
         <Col md={8}>

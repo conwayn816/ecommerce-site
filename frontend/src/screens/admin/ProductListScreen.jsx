@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import Paginate from "../../components/Paginate";
+import Meta from "../../components/Meta";
 import {
   useGetProductsQuery,
   useCreateProductMutation,
@@ -49,6 +50,7 @@ const ProductListScreen = () => {
 
   return (
     <>
+      <Meta title="Products" />
       <Row className="align-items-center">
         <Col>
           <h1>Products</h1>

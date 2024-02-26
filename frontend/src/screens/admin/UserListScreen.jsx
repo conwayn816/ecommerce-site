@@ -3,6 +3,7 @@ import { Table, Button } from "react-bootstrap";
 import { FaTimes, FaTrash, FaEdit, FaCheck } from "react-icons/fa";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
+import Meta from "../../components/Meta";
 import { toast } from "react-toastify";
 import { useGetUsersQuery, useDeleteUserMutation } from "../../slices/usersApiSlice";
 
@@ -24,6 +25,7 @@ const UserListScreen = () => {
 
   return (
     <>
+      <Meta title="Users" />
       <h1>Users</h1>
       {loadingDelete && <Loader />}
       {isLoading ? (
