@@ -1,2 +1,2 @@
 # ecommerce-site
-By Nathan Conway (nac20a)
+By Nathan Conway
