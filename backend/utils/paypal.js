@@ -11,11 +11,10 @@ const { PAYPAL_CLIENT_ID, PAYPAL_APP_SECRET, PAYPAL_API_URL } = process.env;
  *
  */
 async function getPayPalAccessToken() {
-  // Authorization header requires base64 encoding
+
   const auth = Buffer.from(PAYPAL_CLIENT_ID + ":" + PAYPAL_APP_SECRET).toString(
     "base64"
   );
-
   const url = `${PAYPAL_API_URL}/v1/oauth2/token`;
 
   const headers = {
@@ -31,10 +30,13 @@ async function getPayPalAccessToken() {
     body,
   });
 
-  if (!response.ok) throw new Error("Failed to get access token");
+  // Check if the response is ok, if not throw an error with the response text
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error("Failed to get access token: " + errorText);
+  }
 
   const paypalData = await response.json();
-
   return paypalData.access_token;
 }
 
@@ -71,6 +73,16 @@ export async function checkIfNewTransaction(orderModel, paypalTransactionId) {
  *
  */
 export async function verifyPayPalPayment(paypalTransactionId) {
+  // Validate the transaction ID to prevent SSRF
+  // PayPal order IDs are typically 17-character alphanumeric strings, sometimes with dashes/underscores
+  const validIdPattern = /^[A-Za-z0-9_-]{10,32}$/;
+  if (
+    typeof paypalTransactionId !== "string" ||
+    !validIdPattern.test(paypalTransactionId)
+  ) {
+    throw new Error("Invalid PayPal transaction ID");
+  }
+
   const accessToken = await getPayPalAccessToken();
   const paypalResponse = await fetch(
     `${PAYPAL_API_URL}/v2/checkout/orders/${paypalTransactionId}`,
