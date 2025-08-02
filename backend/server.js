@@ -19,6 +19,7 @@ const port = process.env.PORT || 5001;
 connectDB();
 
 const app = express();
+app.set("trust proxy", 1); // Trust first proxy for rate limiting
 
 //Request Body parser middleware
 app.use(express.json());
