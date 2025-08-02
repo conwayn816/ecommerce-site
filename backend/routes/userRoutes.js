@@ -1,5 +1,6 @@
 import Express from "express";
 const router = Express.Router();
+import { limiter } from "../utils/limiter.js";
 import {
   authUser,
   registerUser,
@@ -13,6 +14,8 @@ import {
 } from "../controllers/userController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
+// Apply rate limiting to all user routes
+router.use(limiter);
 router.route("/").post(registerUser).get(protect, admin, getUsers);
 
 router.post("/logout", logoutUser);

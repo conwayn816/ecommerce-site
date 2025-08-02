@@ -4,6 +4,9 @@ import session from "express-session";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import lusca from "lusca";
+import rateLimit from "express-rate-limit";
+
+// Load environment variables from .env file
 dotenv.config();
 import connectDB from "./config/db.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
@@ -16,6 +19,7 @@ const port = process.env.PORT || 5001;
 connectDB();
 
 const app = express();
+app.set("trust proxy", 1); // Trust first proxy for rate limiting
 
 //Request Body parser middleware
 app.use(express.json());
@@ -56,7 +60,15 @@ app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/frontend/build")));
 
-  app.get("*", (req, res) =>
+  // Define rate limiter: 100 requests per 15 minutes per IP
+  const staticLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: "Too many requests from this IP, please try again later.",
+  });
+
+  // Apply rate limiter to static file serving route
+  app.get("*", staticLimiter, (req, res) =>
     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
   );
 } else {
