@@ -4,8 +4,22 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header'
 import Footer from './components/Footer';
+import { useDispatch } from 'react-redux';
+import { setCsrfToken } from './slices/authSlice';
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      const response = await fetch('/api/csrf-token');
+      const data = await response.json();
+      dispatch(setCsrfToken(data.csrfToken));
+    };
+
+    fetchCsrfToken();
+  }, [dispatch]);
+
   return (
     <>
       <Header />
