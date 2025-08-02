@@ -25,7 +25,9 @@ app.use(
     secret: process.env.SESSION_SECRET || "yourSecret",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // set to true if using HTTPS
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // enforce secure cookies in production
+    }, // set to true if using HTTPS
   })
 );
 //cookie parser middleware
