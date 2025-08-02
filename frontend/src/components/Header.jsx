@@ -12,7 +12,7 @@ import logo from "../assets/logo.png";
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
-
+  const csrfToken = useSelector((state) => state.auth.csrfToken);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -20,7 +20,9 @@ const Header = () => {
 
   const logoutHandler = async () => {
     try {
-      await logoutApiCall().unwrap();
+      await logoutApiCall(undefined, {
+         headers: { "X-CSRF-Token": csrfToken } 
+        }).unwrap();
       dispatch(logout());
       dispatch(resetCart());
       navigate("/login");

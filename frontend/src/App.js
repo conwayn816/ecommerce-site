@@ -13,7 +13,7 @@ const App = () => {
 
   useEffect(() => {
     const fetchCsrfToken = async () => {
-      const response = await fetch('/api/csrf-token');
+      const response = await fetch("/api/csrf-token", { credentials: "include" }); // <-- add credentials
       const data = await response.json();
       dispatch(setCsrfToken(data.csrfToken));
     };
