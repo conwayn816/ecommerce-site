@@ -6,7 +6,7 @@ import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
 import Meta from "../components/Meta";
 import { useLoginMutation } from "../slices/usersApiSlice";
-import { setCredentials } from "../slices/authSlice";
+import { setCredentials, setCsrfToken } from "../slices/authSlice";
 import { toast } from "react-toastify";
 
 const LoginScreen = () => {
@@ -35,6 +35,12 @@ const LoginScreen = () => {
     try {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
+
+      // Step 2: Fetch and store CSRF token after login
+      const csrfRes = await fetch("/api/csrf-token", { credentials: "include" });
+      const csrfData = await csrfRes.json();
+      dispatch(setCsrfToken(csrfData.csrfToken));
+
       navigate(redirect);
     } catch (err) {
       toast.error(err?.data?.message || err?.error);

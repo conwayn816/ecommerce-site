@@ -6,6 +6,7 @@ import Header from './components/Header'
 import Footer from './components/Footer';
 import { useDispatch } from 'react-redux';
 import { setCsrfToken } from './slices/authSlice';
+import { useEffect } from 'react';
 
 const App = () => {
   const dispatch = useDispatch();
