@@ -53,7 +53,7 @@ export async function checkIfNewTransaction(orderModel, paypalTransactionId) {
   try {
     // Find all documents where Order.paymentResult.id is the same as the id passed paypalTransactionId
     const orders = await orderModel.find({
-      "paymentResult.id": paypalTransactionId,
+      "paymentResult.id": { $eq: paypalTransactionId },
     });
 
     // If there are no such orders, then it's a new transaction.
