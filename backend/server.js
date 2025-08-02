@@ -1,7 +1,9 @@
 import path from "path";
 import express from "express";
+import session from "express-session";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import lusca from "lusca";
 dotenv.config();
 import connectDB from "./config/db.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
@@ -18,9 +20,26 @@ const app = express();
 //Request Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "yourSecret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // enforce secure cookies in production
+    }, // set to true if using HTTPS
+  })
+);
 //cookie parser middleware
 app.use(cookieParser());
+//Security middleware
+app.use(
+  lusca({
+    csrf: true,
+    xframe: "SAMEORIGIN",
+    xssProtection: true,
+  })
+);
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
