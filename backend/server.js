@@ -39,7 +39,7 @@ app.use(cookieParser());
 //Security middleware
 app.use(
   lusca({
-    csrf: false, // Disable CSRF protection for now
+    csrf: true, // Enable CSRF protection
     xframe: "SAMEORIGIN",
     xssProtection: true,
   })
@@ -49,6 +49,12 @@ app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
+
+app.get("/api/csrf-token", (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
+// PayPal configuration endpoint
 
 app.get("/api/config/paypal", (req, res) =>
   res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
