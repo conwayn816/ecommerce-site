@@ -7,7 +7,11 @@ import generateToken from "../utils/generateToken.js";
 // @access  Public
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
+  
+  if (typeof email !== "string") {
+    res.status(400);
+    throw new Error("Invalid email format");
+  }
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
@@ -46,6 +50,10 @@ const logoutUser = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
+  if (typeof email !== "string") {
+    res.status(400);
+    throw new Error("Invalid email format");
+  }
   const userExits = await User.findOne({ email });
 
   if (userExits) {
