@@ -35,7 +35,7 @@ app.use(cookieParser());
 //Security middleware
 app.use(
   lusca({
-    csrf: true,
+    csrf: false, // Disable CSRF protection for now
     xframe: "SAMEORIGIN",
     xssProtection: true,
   })
