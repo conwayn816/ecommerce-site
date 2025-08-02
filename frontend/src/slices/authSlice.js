@@ -4,6 +4,7 @@ const initialState = {
   userInfo: localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
     : null,
+  csrfToken: null, // Initialize csrfToken
 };
 
 const authSlice = createSlice({
@@ -16,11 +17,15 @@ const authSlice = createSlice({
     },
     logout(state) {
       state.userInfo = null;
+      state.csrfToken = null; // Clear csrfToken on logout
       localStorage.clear();
     },
+    setCsrfToken(state, action) {
+      state.csrfToken = action.payload; // Set csrfToken from action payload
+    }
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, logout, setCsrfToken } = authSlice.actions;
 
 export default authSlice.reducer;
