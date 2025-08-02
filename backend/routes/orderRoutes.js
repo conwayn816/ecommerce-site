@@ -1,5 +1,6 @@
 import Express from "express";
 const router = Express.Router();
+import { limiter } from "../utils/limiter.js";
 import {
   addOrderItems,
   getMyOrders,
@@ -10,6 +11,7 @@ import {
 } from "../controllers/orderController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
+router.use(limiter);
 router.route("/").post(protect, addOrderItems).get(protect, admin, getOrders);
 
 router.route("/myorders").get(protect, getMyOrders);
