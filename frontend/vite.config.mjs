@@ -5,8 +5,8 @@ export default defineConfig({
     plugins: [react()],
     // Allow JSX in .js files (needed for CRA migration — source files use .js not .jsx)
     optimizeDeps: {
-        esbuildOptions: {
-            loader: {
+        rolldownOptions: {
+            moduleTypes: {
                 '.js': 'jsx',
             },
         },
