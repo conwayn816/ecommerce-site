@@ -58,7 +58,7 @@ const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/frontend/build")));
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
   // Define rate limiter: 100 requests per 15 minutes per IP
   const staticLimiter = rateLimit({
@@ -69,7 +69,7 @@ if (process.env.NODE_ENV === "production") {
 
   // Apply rate limiter to static file serving route
   app.get("*", staticLimiter, (req, res) =>
-    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
   );
 } else {
   app.get("/", (req, res) => {
