@@ -98,7 +98,7 @@ const ProductScreen = () => {
             </Col>
             <Col md={3}>
               <Card>
-                <ListGroup varient="flush">
+                <ListGroup variant="flush">
                   <ListGroup.Item>
                     <Row>
                       <Col>Price:</Col>
@@ -170,7 +170,7 @@ const ProductScreen = () => {
                   {loadingProductReview && <Loader />}
                   {userInfo ? (
                     <Form
-                      onSubmit={ submitHandler }
+                      onSubmit={submitHandler}
                     >
                       <Form.Group controlId="rating" className="my-2">
                         <Form.Label>Rating</Form.Label>

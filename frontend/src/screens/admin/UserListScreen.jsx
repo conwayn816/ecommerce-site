@@ -14,7 +14,7 @@ const UserListScreen = () => {
   const deleteHandler = async (id) => {
     if (window.confirm("Are you sure")) {
       try {
-        deleteUser(id);
+        await deleteUser(id).unwrap();
         toast.success("User removed");
         refetch();
       } catch (err) {
@@ -65,13 +65,13 @@ const UserListScreen = () => {
                       <FaEdit />
                     </Button>
                   </LinkContainer>
-                    <Button
-                        variant="danger"
-                        className="btn-sm"
-                        onClick={() => deleteHandler(user._id)}
-                    >
-                        <FaTrash style={{color: 'white'}}/>
-                    </Button>
+                  <Button
+                    variant="danger"
+                    className="btn-sm"
+                    onClick={() => deleteHandler(user._id)}
+                  >
+                    <FaTrash style={{ color: 'white' }} />
+                  </Button>
                 </td>
               </tr>
             ))}

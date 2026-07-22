@@ -13,7 +13,6 @@ import store from "./store";
 import "./assets/styles/index.css";
 import "./assets/styles/bootstrap.custom.css";
 import App from "./App";
-import reportWebVitals from "./reportWebVitals";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
 import HomeScreen from "./screens/HomeScreen";
@@ -83,4 +82,3 @@ root.render(
   </React.StrictMode>
 );
 
-reportWebVitals();
