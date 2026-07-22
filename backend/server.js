@@ -1,6 +1,7 @@
 import path from "path";
 import express from "express";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import lusca from "lusca";
@@ -28,7 +29,8 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET || "yourSecret",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
     cookie: {
       secure: process.env.NODE_ENV === "production", // enforce secure cookies in production
     }, // set to true if using HTTPS
